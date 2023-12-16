@@ -1,6 +1,7 @@
 from mesa.visualization.modules import CanvasGrid
 from mesa.visualization.ModularVisualization import ModularServer
 
+from view_elements import ViewModifier
 from model import CrowdSimulatorModel
 
 
@@ -13,7 +14,9 @@ def agent_portrayal(agent):
         return {"Shape": "rect", "Filled": "true", "Layer": 0, "Color": "green", "w": 0.9, "h": 0.9}
 
 
-grid = CanvasGrid(agent_portrayal, 50, 50, 700, 700)
-server = ModularServer(CrowdSimulatorModel, [grid], "Crowd Simulation", {"grid_width": 50, "grid_height": 50})
+view_modifier = ViewModifier()
+
+grid = CanvasGrid(agent_portrayal, 150, 50, 1500, 500)
+server = ModularServer(CrowdSimulatorModel, [grid, view_modifier], "Crowd Simulation", {"grid_width": 150, "grid_height": 50})
 server.port = 8521
 server.launch()
