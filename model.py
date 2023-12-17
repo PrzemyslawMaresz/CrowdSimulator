@@ -1,7 +1,8 @@
 from mesa import Model
 from mesa.space import SingleGrid
 from mesa.time import RandomActivation
-from agent import Person, Wall, Exit
+from agents import Person, Wall, Exit
+from grid import StaticField
 
 
 class CrowdSimulatorModel(Model):
@@ -10,11 +11,9 @@ class CrowdSimulatorModel(Model):
         super().__init__()
         self.grid = SingleGrid(grid_width, grid_height, False)
         self.schedule = RandomActivation(self)
-        self.X = 0
-        self.Y = 0
 
-        exit_cell = Exit(1, self)
-        self.grid.place_agent(exit_cell, (self.X, self.Y))
+        self.grid.place_agent(Exit(1, self), (0, 0))
+        self.grid.place_agent(Exit(2, self), (grid_width - 1, grid_height - 1))
 
         for i in range(200):
             wall = Wall(i, self)
@@ -31,6 +30,8 @@ class CrowdSimulatorModel(Model):
                 agent = Person(i, self)
                 self.schedule.add(agent)
                 self.grid.place_agent(agent, (x, y))
+
+        self.static_field = StaticField(self.grid)
 
     def step(self) -> None:
         self.schedule.step()
