@@ -33,7 +33,13 @@ class StaticField:
             for y in range(self.grid.height - 1, -1, -1):
                 for x in range(self.grid.width):
                     value = self.field[x][y].field_value
-                    print('{:03.0f}'.format(value), end=' ', file=f)
+                    formatted_value = "{:.1f}".format(value)
+                    if formatted_value == 'inf':
+                        formatted_value = '####'
+                    l = len(formatted_value)
+                    if l < 5:
+                        formatted_value += ' ' * (5 - l)
+                    print(formatted_value, end=' ', file=f)
                 print(file=f)
 
     def __set_cells(self):
@@ -61,12 +67,16 @@ class StaticField:
                 neighbourhood = self.__get_empty_neighbourhood(cell.coordinates)
                 neighbours_values = []
                 for neighbour in neighbourhood:
-                    neighbours_values.append(neighbour.field_value)
+                    if cell.is_neighbour_diagonal(neighbour):
+                        move_value = 1.4
+                    else:
+                        move_value = 1.0
+                    neighbours_values.append(neighbour.field_value + move_value)
                     if not neighbour.was_visited:
                         queue.append(neighbour)
                         neighbour.was_visited = True
                 if not cell.is_exit:
-                    cell.field_value = min(neighbours_values) + 1
+                    cell.field_value = min(neighbours_values)
 
     def __get_empty_neighbourhood(self, coordinates: (int, int)) -> list[Cell]:
         cell_x, cell_y = coordinates
@@ -101,3 +111,8 @@ class Cell:
         self.was_visited = False
         self.is_obstacle = is_obstacle
         self.is_exit = is_exit
+
+    def is_neighbour_diagonal(self, other: Cell) -> bool:
+        return (abs(self.coordinates[0] - other.coordinates[0]) == 1
+                and
+                abs(self.coordinates[1] - other.coordinates[1]) == 1)
