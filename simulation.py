@@ -11,7 +11,7 @@ def agent_portrayal(agent):
     elif type(agent).__name__ == "Wall":
         return {"Shape": "rect", "Filled": "true", "Layer": 0, "Color": "black", "w": 0.9, "h": 0.9}
     else:
-        return {"Shape": "rect", "Filled": "true", "Layer": 0, "Color": "green", "w": 0.9, "h": 0.9}
+        return {"Shape": "rect", "Filled": "true", "Layer": 0, "Color": "lightgreen", "w": 0.9, "h": 0.9}
 
 
 view_modifier = ViewModifier()

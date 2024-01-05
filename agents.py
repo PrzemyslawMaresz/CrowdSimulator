@@ -15,11 +15,18 @@ class Person(Agent):
         )
         possible_steps = [step
                           for step in possible_steps
-                          if self.model.grid.is_cell_empty(step)]
+                          if self.model.grid.is_cell_empty(step)
+                          or isinstance(self.model.grid.get_cell_list_contents(step)[0], Exit)]
         if possible_steps:
-            print(possible_steps)
-            best_step = self.model.static_field.find_direction(possible_steps)
-            self.model.grid.move_agent(self, best_step)
+            x, y, field_value = self.model.static_field.find_direction(possible_steps)
+            if field_value == 0:
+                self.remove_agent()
+            else:
+                self.model.grid.move_agent(self, (x, y))
+
+    def remove_agent(self) -> None:
+        self.model.grid.remove_agent(self)
+        self.model.schedule.remove(self)
 
 
 class Wall(Agent):

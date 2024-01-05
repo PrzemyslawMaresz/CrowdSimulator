@@ -16,12 +16,13 @@ class StaticField:
 
         self.save_field_values()
 
-    def find_direction(self, neighbours: list[(int, int)]) -> (int, int):
+    def find_direction(self, neighbours: list[(int, int)]) -> (int, int, float):
         directions = [neighbour for neighbour in neighbours]
         min_value = self.get_field_value(min(directions, key=self.get_field_value))
-        return random.choice([direction
-                              for direction in directions
-                              if self.get_field_value(direction) == min_value])
+        (x, y) = random.choice([direction
+                                for direction in directions
+                                if self.get_field_value(direction) == min_value])
+        return x, y, min_value
 
     def get_field_value(self, coordinates: (int, int)) -> float:
         x, y = coordinates
