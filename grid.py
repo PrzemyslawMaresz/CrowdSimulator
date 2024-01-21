@@ -1,13 +1,13 @@
 from __future__ import annotations
 from mesa.space import SingleGrid
-from agents import Wall, Exit
 import random
 
 
 class StaticField:
 
-    def __init__(self, grid: SingleGrid):
+    def __init__(self, grid: SingleGrid, floor_num: int):
         self.grid = grid
+        self.floor_num = floor_num
         self.field: list[list[Cell]] = []
         self.exits_coordinates: list[(int, int)] = []
 
@@ -29,7 +29,8 @@ class StaticField:
         return self.field[x][y].field_value
 
     def save_field_values(self):
-        with open('static_field.txt', 'w') as f:
+        file_name = 'static_field1.txt' if self.floor_num == 1 else 'static_field2.txt'
+        with open(file_name, 'w') as f:
             for y in range(self.grid.height - 1, -1, -1):
                 for x in range(self.grid.width):
                     value = self.field[x][y].field_value
@@ -48,10 +49,15 @@ class StaticField:
             self.field.append([])
             for y in range(self.grid.height):
                 cell_content = self.grid._grid[x][y]
-                initial_field_value = 0 if isinstance(cell_content, Exit) else float('inf')
-                cell = Cell((x, y), initial_field_value, isinstance(cell_content, Wall), isinstance(cell_content, Exit))
+
+                if type(cell_content).__name__ == "EnterStairs" or type(cell_content).__name__ == "Exit":
+                    initial_field_value = 0
+                else:
+                    initial_field_value = float('inf')
+
+                cell = Cell((x, y), initial_field_value, self.__is_obstacle(cell_content), self.__is_exit(cell_content))
                 self.field[x].append(cell)
-                if isinstance(cell_content, Exit):
+                if self.__is_exit(cell_content):
                     self.exits_coordinates.append((x, y))
 
     def __calculate_static_field(self):
@@ -96,6 +102,24 @@ class StaticField:
         for row in self.field:
             for cell in row:
                 cell.was_visited = False
+
+    def __is_obstacle(self, cell_content):
+        match type(cell_content).__name__:
+            case "Wall":
+                return True
+            case "ExitStairs":
+                return True
+            case _:
+                return False
+
+    def __is_exit(self, cell_content):
+        match type(cell_content).__name__:
+            case "Exit":
+                return True
+            case "EnterStairs":
+                return True
+            case _:
+                return False
 
 
 class Cell:
