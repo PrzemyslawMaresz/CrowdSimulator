@@ -7,7 +7,7 @@ Modelowanie ruchu agentów (ludzi) w środowisku budynku. <br>
 Wizualizacja procesu ewakuacji. <br>
 Analiza danych dotyczących ewakuacji.
 ## Wymagania
-Python 3 <br> 
+Python 3.12 <br> 
 Użyj `pip install mesa` do zainstalowania Mesa.
 ## Użycie
 `python simulation.py`
