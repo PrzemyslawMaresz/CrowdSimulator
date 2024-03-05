@@ -14,5 +14,4 @@ Mesa 2.1.5 `pip install mesa` <br>
 
 ## Widok symulacji
 
-<img src="images/img1.png" style="max-width: 800px" alt="img1">
-<img src="images/img2.png" style="max-width: 800px" alt="img1">
+https://github.com/PrzemyslawMaresz/CrowdSimulator/assets/92407582/88f99561-f918-4d31-bd5a-96e2151ff633
